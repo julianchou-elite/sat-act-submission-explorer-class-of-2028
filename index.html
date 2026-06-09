@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elite Prep | SAT & ACT Score Submission Explorer</title>
+  <style>
+    :root {
+      --elite-navy: #0b1f3a;
+      --elite-blue: #174a7c;
+      --elite-gold: #d6a843;
+      --elite-light: #f6f8fb;
+      --elite-card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --sat: #2563eb;
+      --act: #7c3aed;
+      --good: #0f766e;
+      --warn: #b45309;
+      --shadow: 0 16px 40px rgba(11, 31, 58, 0.13);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #edf3fb 0%, #f8fafc 46%, #ffffff 100%);
+      color: var(--text);
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at top right, rgba(214, 168, 67, 0.22), transparent 35%),
+        linear-gradient(135deg, var(--elite-navy), #102f57 55%, #0f3d6d);
+      color: white;
+      padding: 28px 22px 34px;
+    }
+
+    .hero-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 26px;
+    }
+
+    .brand-mark {
+      width: 56px;
+      height: 56px;
+      min-width: 56px;
+      min-height: 56px;
+      flex: 0 0 56px;
+      border-radius: 50%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .brand-mark img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-text .top {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .brand-text .sub {
+      font-size: 14px;
+      color: rgba(255,255,255,.78);
+      margin-top: 2px;
+    }
+
+    h1 {
+      font-size: clamp(32px, 5vw, 58px);
+      line-height: 1.03;
+      margin: 0 0 14px;
+      letter-spacing: -0.045em;
+      max-width: 920px;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 860px;
+      color: rgba(255,255,255,.84);
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: -24px auto 44px;
+      padding: 0 22px;
+    }
+
+    .panel {
+      background: var(--elite-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(229, 231, 235, 0.85);
+      overflow: hidden;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      padding: 18px;
+      background: rgba(255,255,255,.92);
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      background: linear-gradient(180deg, #ffffff, #f8fafc);
+    }
+
+    .metric .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .metric .value {
+      font-size: 31px;
+      font-weight: 900;
+      margin-top: 6px;
+      letter-spacing: -0.04em;
+      color: var(--elite-navy);
+    }
+
+    .metric .detail {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .controls {
+      padding: 18px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1.35fr repeat(4, minmax(135px, 1fr));
+      gap: 12px;
+      background: #fbfdff;
+    }
+
+    input, select, button {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      background: white;
+      border-radius: 12px;
+      padding: 11px 12px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--elite-blue);
+      box-shadow: 0 0 0 3px rgba(23, 74, 124, 0.12);
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 800;
+      color: white;
+      border-color: var(--elite-blue);
+      background: linear-gradient(135deg, var(--elite-blue), var(--elite-navy));
+    }
+
+    .utility {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 18px;
+      background: white;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .toggle {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px;
+      background: #f8fafc;
+      gap: 4px;
+    }
+
+    .toggle button {
+      width: auto;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .toggle button.active {
+      color: white;
+      background: var(--elite-blue);
+    }
+
+    .table-wrap {
+      overflow: auto;
+      max-height: 72vh;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 900px;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      background: var(--elite-navy);
+      color: white;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      text-align: left;
+      padding: 13px 14px;
+      z-index: 3;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    thead th:hover { background: #13365f; }
+
+    tbody td {
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    tbody tr:hover { background: #f8fbff; }
+
+    .rank {
+      font-weight: 900;
+      color: var(--elite-navy);
+      width: 66px;
+    }
+
+    .school {
+      font-weight: 850;
+      color: #111827;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-weight: 800;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .percent {
+      font-weight: 900;
+      color: var(--elite-navy);
+      min-width: 58px;
+      display: inline-block;
+    }
+
+    .bar {
+      height: 9px;
+      width: 130px;
+      background: #eef2f7;
+      border-radius: 999px;
+      overflow: hidden;
+      display: inline-block;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    .fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .fill.sat { background: var(--sat); }
+    .fill.act { background: var(--act); }
+    .fill.combined { background: var(--elite-gold); }
+
+    .insight {
+      padding: 16px 18px 20px;
+      background: #fffaf0;
+      border-top: 1px solid #f3e5c4;
+      color: #5f420a;
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .insight strong { color: #3f2a06; }
+
+    @media (max-width: 900px) {
+      .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .controls { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .summary, .controls { grid-template-columns: 1fr; }
+      .utility { flex-direction: column; align-items: stretch; }
+      .brand-mark { width: 46px; height: 46px; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="brand">
+        <div class="brand-mark"><img src="Elite_Seal.png" alt="Elite Prep Seal"></div>
+        <div class="brand-text">
+          <div class="top">Elite Prep</div>
+          <div class="sub">College Admissions Explorer</div>
+        </div>
+      </div>
+      <h1>SAT & ACT Score Submission Explorer</h1>
+      <p>Explore the percentage of enrolled Class of 2028 students who submitted SAT and ACT scores by institution, state, and region. Use the filters to compare testing patterns and identify where score submission was more or less common.</p>
+    </div>
+  </section>
+
+  <main class="wrap">
+    <section class="panel">
+      <div class="summary">
+        <div class="metric">
+          <div class="label">Institutions Shown</div>
+          <div class="value" id="countMetric">336</div>
+          <div class="detail">Filtered from 336 colleges</div>
+        </div>
+        <div class="metric">
+          <div class="label">Avg. SAT Submitted</div>
+          <div class="value" id="avgSatMetric">—</div>
+          <div class="detail">Among visible institutions</div>
+        </div>
+        <div class="metric">
+          <div class="label">Avg. ACT Submitted</div>
+          <div class="value" id="avgActMetric">—</div>
+          <div class="detail">Among visible institutions</div>
+        </div>
+        <div class="metric">
+          <div class="label">Highest Visible Rate</div>
+          <div class="value" id="highestMetric">—</div>
+          <div class="detail" id="highestDetail">—</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <input id="searchInput" type="search" placeholder="Search institution, state, or region..." />
+        <select id="regionFilter"><option value="">All Regions</option></select>
+        <select id="stateFilter"><option value="">All States</option></select>
+        <select id="testFilter">
+          <option value="">All Testing Patterns</option>
+          <option value="sat">SAT higher than ACT</option>
+          <option value="act">ACT higher than SAT</option>
+          <option value="balanced">SAT and ACT equal</option>
+        </select>
+        <button id="resetBtn">Reset Filters</button>
+      </div>
+
+      <div class="utility">
+        <div id="resultText">Showing all institutions</div>
+        <div class="toggle" aria-label="Sort shortcut">
+          <button class="active" data-sort="sat">Top SAT</button>
+          <button data-sort="act">Top ACT</button>
+          <button data-sort="combined">Top Either Test</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-key="rank">Rank</th>
+              <th data-key="institution">Institution</th>
+              <th data-key="region">Region</th>
+              <th data-key="state">State</th>
+              <th data-key="sat">SAT Submitted</th>
+              <th data-key="act">ACT Submitted</th>
+              <th data-key="combined">Higher of SAT/ACT</th>
+              <th data-key="pattern">Pattern</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="insight">
+        <strong>How to read this table:</strong> A 35% SAT value means 35% of enrolled Class of 2028 students submitted SAT scores. These figures should be interpreted as score-submission patterns, not admit rates or proof that scores were required.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const data = [{"institution": "Agnes Scott College", "state": "GA", "region": "Southeast", "act": 0.18, "sat": 0.27}, {"institution": "Alfred University", "state": "NY", "region": "Mid-Atlantic", "act": 0.04, "sat": 0.26}, {"institution": "Allegheny College", "state": "PA", "region": "Mid-Atlantic", "act": 0.09, "sat": 0.29}, {"institution": "Alma College", "state": "MI", "region": "Great Lakes", "act": 0.0, "sat": 0.35}, {"institution": "American University", "state": "DC", "region": "Mid-Atlantic", "act": 0.08, "sat": 0.22}, {"institution": "Amherst College", "state": "MA", "region": "New England", "act": 0.22, "sat": 0.39}, {"institution": "Antioch College", "state": "OH", "region": "Great Lakes", "act": null, "sat": 0.2}, {"institution": "Auburn University", "state": "AL", "region": "Southeast", "act": 0.76, "sat": 0.16}, {"institution": "Augustana College", "state": "IL", "region": "Great Lakes", "act": 0.14, "sat": 0.56}, {"institution": "Austin College", "state": "TX", "region": "Southwest", "act": 0.08, "sat": 0.24}, {"institution": "Babson College", "state": "MA", "region": "New England", "act": 0.03, "sat": 0.22}, {"institution": "Barnard College", "state": "NY", "region": "Mid-Atlantic", "act": 0.15, "sat": 0.35}, {"institution": "Bates College", "state": "ME", "region": "New England", "act": 0.05, "sat": 0.15}, {"institution": "Baylor University", "state": "TX", "region": "Southwest", "act": 0.23, "sat": 0.44}, {"institution": "Belmont University", "state": "TN", "region": "Southeast", "act": 0.37, "sat": 0.18}, {"institution": "Beloit College", "state": "WI", "region": "Great Lakes", "act": 0.07, "sat": 0.08}, {"institution": "Bennington College", "state": "VT", "region": "New England", "act": 0.04, "sat": 0.1}, {"institution": "Bentley University", "state": "MA", "region": "New England", "act": 0.02, "sat": 0.19}, {"institution": "Bethel University (TN)", "state": "TN", "region": "Southeast", "act": 0.29, "sat": 0.02}, {"institution": "Biola University", "state": "CA", "region": "West Coast", "act": 0.09, "sat": 0.2}, {"institution": "Boise State University", "state": "ID", "region": "Rocky Mts", "act": 0.05, "sat": 0.49}, {"institution": "Boston University", "state": "MA", "region": "New England", "act": 0.1, "sat": 0.33}, {"institution": "Bowdoin College", "state": "ME", "region": "New England", "act": 0.17, "sat": 0.31}, {"institution": "Bradley University", "state": "IL", "region": "Great Lakes", "act": 0.05, "sat": 0.2}, {"institution": "Brandeis University", "state": "MA", "region": "New England", "act": 0.1, "sat": 0.3}, {"institution": "Bridgewater State University", "state": "MA", "region": "New England", "act": 0.01, "sat": 0.08}, {"institution": "Brown University", "state": "RI", "region": "New England", "act": 0.24, "sat": 0.61}, {"institution": "Bryn Mawr College", "state": "PA", "region": "Mid-Atlantic", "act": 0.21, "sat": 0.64}, {"institution": "Bucknell University", "state": "PA", "region": "Mid-Atlantic", "act": 0.19, "sat": 0.68}, {"institution": "Butler University", "state": "IN", "region": "Great Lakes", "act": 0.19, "sat": 0.35}, {"institution": "California Poly State U. - San Luis Obispo", "state": "CA", "region": "West Coast", "act": 0.07, "sat": 0.28}, {"institution": "Calvin University", "state": "MI", "region": "Great Lakes", "act": 0.09, "sat": 0.39}, {"institution": "Carleton College", "state": "MN", "region": "Plains", "act": 0.25, "sat": 0.34}, {"institution": "Carnegie Mellon University", "state": "PA", "region": "Mid-Atlantic", "act": 0.22, "sat": 0.53}, {"institution": "Case Western Reserve University", "state": "OH", "region": "Great Lakes", "act": 0.23, "sat": 0.46}, {"institution": "Catawba College", "state": "NC", "region": "Southeast", "act": 0.33, "sat": 0.14}, {"institution": "Catholic University", "state": "DC", "region": "Mid-Atlantic", "act": 0.03, "sat": 0.12}, {"institution": "Chapman University", "state": "CA", "region": "West Coast", "act": 0.05, "sat": 0.14}, {"institution": "Claremont McKenna College", "state": "CA", "region": "West Coast", "act": 0.13, "sat": 0.26}, {"institution": "Clark University", "state": "MA", "region": "New England", "act": 0.05, "sat": 0.16}, {"institution": "Clemson University", "state": "SC", "region": "Southeast", "act": 0.2, "sat": 0.35}, {"institution": "Coastal Carolina University", "state": "SC", "region": "Southeast", "act": 0.08, "sat": 0.23}, {"institution": "Coe College", "state": "IA", "region": "Plains", "act": 0.32, "sat": 0.19}, {"institution": "Colby College", "state": "ME", "region": "New England", "act": 0.16, "sat": 0.36}, {"institution": "College of Charleston", "state": "SC", "region": "Southeast", "act": 0.11, "sat": 0.18}, {"institution": "College of Wooster", "state": "OH", "region": "Great Lakes", "act": 0.22, "sat": 0.25}, {"institution": "College of the Atlantic", "state": "ME", "region": "New England", "act": 0.04, "sat": 0.21}, {"institution": "Colorado College", "state": "CO", "region": "Rocky Mts", "act": 0.16, "sat": 0.29}, {"institution": "Colorado School of Mines", "state": "CO", "region": "Rocky Mts", "act": 0.18, "sat": 0.42}, {"institution": "Colorado State University - Fort Collins", "state": "CO", "region": "Rocky Mts", "act": 0.07, "sat": 0.28}, {"institution": "Columbia University", "state": "NY", "region": "Mid-Atlantic", "act": 0.17, "sat": 0.44}, {"institution": "Connecticut College", "state": "CT", "region": "New England", "act": 0.12, "sat": 0.54}, {"institution": "Cornell University", "state": "NY", "region": "Mid-Atlantic", "act": 0.14, "sat": 0.45}, {"institution": "Creighton University", "state": "NE", "region": "Plains", "act": 0.41, "sat": 0.1}, {"institution": "Davidson College", "state": "NC", "region": "Southeast", "act": 0.23, "sat": 0.28}, {"institution": "DePaul University", "state": "IL", "region": "Great Lakes", "act": 0.14, "sat": 0.42}, {"institution": "DePauw University", "state": "IN", "region": "Great Lakes", "act": 0.18, "sat": 0.58}, {"institution": "Denison University", "state": "OH", "region": "Great Lakes", "act": 0.22, "sat": 0.29}, {"institution": "Dickinson College", "state": "PA", "region": "Mid-Atlantic", "act": 0.13, "sat": 0.23}, {"institution": "Drake University", "state": "IA", "region": "Plains", "act": 0.18, "sat": 0.05}, {"institution": "Drexel University", "state": "PA", "region": "Mid-Atlantic", "act": 0.05, "sat": 0.34}, {"institution": "Duquesne University", "state": "PA", "region": "Mid-Atlantic", "act": 0.04, "sat": 0.2}, {"institution": "Earlham College", "state": "IN", "region": "Great Lakes", "act": 0.09, "sat": 0.23}, {"institution": "East Carolina University", "state": "NC", "region": "Southeast", "act": 0.23, "sat": 0.1}, {"institution": "Eastern Michigan University", "state": "MI", "region": "Great Lakes", "act": 0.05, "sat": 0.68}, {"institution": "Eckerd College", "state": "FL", "region": "Southeast", "act": 0.16, "sat": 0.26}, {"institution": "Elon University", "state": "NC", "region": "Southeast", "act": 0.19, "sat": 0.32}, {"institution": "Emory University/Oxford College", "state": "GA", "region": "Southeast", "act": 0.2, "sat": 0.43}, {"institution": "Evergreen State College", "state": "WA", "region": "West Coast", "act": 0.05, "sat": 0.07}, {"institution": "Fairfield University", "state": "CT", "region": "New England", "act": 0.05, "sat": 0.14}, {"institution": "Flagler College", "state": "FL", "region": "Southeast", "act": 0.21, "sat": 0.35}, {"institution": "Florida Institute of Technology", "state": "FL", "region": "Southeast", "act": 0.31, "sat": 0.72}, {"institution": "Florida State University", "state": "FL", "region": "Southeast", "act": 0.36, "sat": 0.64}, {"institution": "Fordham University", "state": "NY", "region": "Mid-Atlantic", "act": 0.06, "sat": 0.18}, {"institution": "Franklin & Marshall College", "state": "PA", "region": "Mid-Atlantic", "act": 0.09, "sat": 0.25}, {"institution": "Furman University", "state": "SC", "region": "Southeast", "act": 0.22, "sat": 0.27}, {"institution": "Gallaudet University", "state": "DC", "region": "Mid-Atlantic", "act": 0.0, "sat": 0.01}, {"institution": "George Mason University", "state": "VA", "region": "Southeast", "act": 0.02, "sat": 0.19}, {"institution": "George Washington University", "state": "DC", "region": "Mid-Atlantic", "act": 0.12, "sat": 0.27}, {"institution": "Georgetown University", "state": "DC", "region": "Mid-Atlantic", "act": 0.3, "sat": 0.78}, {"institution": "Georgia Institute of Technology", "state": "GA", "region": "Southeast", "act": 0.35, "sat": 0.77}, {"institution": "Gettysburg College", "state": "PA", "region": "Mid-Atlantic", "act": 0.08, "sat": 0.27}, {"institution": "Gonzaga University", "state": "WA", "region": "West Coast", "act": 0.07, "sat": 0.22}, {"institution": "Gordon College", "state": "MA", "region": "New England", "act": 0.08, "sat": 0.29}, {"institution": "Goucher College", "state": "MD", "region": "Mid-Atlantic", "act": 0.05, "sat": 0.19}, {"institution": "Grand Valley State University", "state": "MI", "region": "Great Lakes", "act": 0.04, "sat": 0.53}, {"institution": "Grinnell College", "state": "IA", "region": "Plains", "act": 0.21, "sat": 0.29}, {"institution": "Hamilton College", "state": "NY", "region": "Mid-Atlantic", "act": 0.16, "sat": 0.34}, {"institution": "Harvard University", "state": "MA", "region": "New England", "act": 0.19, "sat": 0.54}, {"institution": "Harvey Mudd College", "state": "CA", "region": "West Coast", "act": 0.16, "sat": 0.52}, {"institution": "Haverford College", "state": "PA", "region": "Mid-Atlantic", "act": 0.17, "sat": 0.39}, {"institution": "Hobart and William Smith Colleges", "state": "NY", "region": "Mid-Atlantic", "act": 0.07, "sat": 0.13}, {"institution": "Hofstra University", "state": "NY", "region": "Mid-Atlantic", "act": 0.04, "sat": 0.26}, {"institution": "Hollins University", "state": "VA", "region": "Southeast", "act": 0.0, "sat": 0.12}, {"institution": "Hope College", "state": "MI", "region": "Great Lakes", "act": 0.1, "sat": 0.29}, {"institution": "Howard University", "state": "DC", "region": "Mid-Atlantic", "act": 0.16, "sat": 0.47}, {"institution": "Illinois Wesleyan University", "state": "IL", "region": "Great Lakes", "act": 0.1, "sat": 0.21}, {"institution": "Indiana University - Bloomington", "state": "IN", "region": "Great Lakes", "act": 0.14, "sat": 0.42}, {"institution": "Indiana University - Indianapolis", "state": "IN", "region": "Great Lakes", "act": 0.04, "sat": 0.33}, {"institution": "Iowa State University", "state": "IA", "region": "Plains", "act": 0.46, "sat": 0.13}, {"institution": "Ithaca College", "state": "NY", "region": "Mid-Atlantic", "act": 0.05, "sat": 0.2}, {"institution": "James Madison University", "state": "VA", "region": "Southeast", "act": 0.03, "sat": 0.14}, {"institution": "Johns Hopkins University", "state": "MD", "region": "Mid-Atlantic", "act": 0.18, "sat": 0.5}, {"institution": "Juniata College", "state": "PA", "region": "Mid-Atlantic", "act": 0.04, "sat": 0.41}, {"institution": "Kansas State University", "state": "KS", "region": "Plains", "act": 0.81, "sat": 0.06}, {"institution": "Kenyon College", "state": "OH", "region": "Great Lakes", "act": 0.1, "sat": 0.11}, {"institution": "Keuka College", "state": "NY", "region": "Mid-Atlantic", "act": null, "sat": 0.01}, {"institution": "Knox College", "state": "IL", "region": "Great Lakes", "act": 0.07, "sat": 0.27}, {"institution": "Lafayette College", "state": "PA", "region": "Mid-Atlantic", "act": 0.1, "sat": 0.23}, {"institution": "Lake Forest College", "state": "IL", "region": "Great Lakes", "act": 0.1, "sat": 0.16}, {"institution": "Lawrence Technological University", "state": "MI", "region": "Great Lakes", "act": 0.05, "sat": 0.53}, {"institution": "Lawrence University", "state": "WI", "region": "Great Lakes", "act": 0.33, "sat": 0.21}, {"institution": "Lehigh University", "state": "PA", "region": "Mid-Atlantic", "act": 0.09, "sat": 0.3}, {"institution": "Lewis & Clark College", "state": "OR", "region": "West Coast", "act": 0.04, "sat": 0.05}, {"institution": "Louisiana State University", "state": "LA", "region": "Southeast", "act": 0.4, "sat": 0.07}, {"institution": "Loyola Marymount University", "state": "CA", "region": "West Coast", "act": 0.08, "sat": 0.18}, {"institution": "Loyola University Chicago", "state": "IL", "region": "Great Lakes", "act": 0.15, "sat": 0.23}, {"institution": "Loyola University Maryland", "state": "MD", "region": "Mid-Atlantic", "act": 0.03, "sat": 0.14}, {"institution": "Loyola University New Orleans", "state": "LA", "region": "Southeast", "act": 0.46, "sat": 0.06}, {"institution": "Lycoming College", "state": "PA", "region": "Mid-Atlantic", "act": 0.01, "sat": 0.19}, {"institution": "Lynn University", "state": "FL", "region": "Southeast", "act": 0.04, "sat": 0.16}, {"institution": "Macalester College", "state": "MN", "region": "Plains", "act": 0.23, "sat": 0.29}, {"institution": "Malone University", "state": "OH", "region": "Great Lakes", "act": 0.65, "sat": 0.1}, {"institution": "Marist College", "state": "NY", "region": "Mid-Atlantic", "act": 0.03, "sat": 0.11}, {"institution": "Marquette University", "state": "WI", "region": "Great Lakes", "act": 0.26, "sat": 0.14}, {"institution": "Massachusetts Institute of Technology", "state": "MA", "region": "New England", "act": 0.29, "sat": 0.83}, {"institution": "McDaniel College", "state": "MD", "region": "Mid-Atlantic", "act": 0.01, "sat": 0.1}, {"institution": "Mercer University", "state": "GA", "region": "Southeast", "act": 0.17, "sat": 0.4}, {"institution": "Meredith College", "state": "NC", "region": "Southeast", "act": 0.14, "sat": 0.11}, {"institution": "Miami University (Ohio) ", "state": "OH", "region": "Great Lakes", "act": 0.24, "sat": 0.08}, {"institution": "Michigan State University", "state": "MI", "region": "Great Lakes", "act": 0.08, "sat": 0.52}, {"institution": "Michigan Technological University", "state": "MI", "region": "Great Lakes", "act": 0.2, "sat": 0.71}, {"institution": "Middlebury College", "state": "VT", "region": "New England", "act": 0.18, "sat": 0.28}, {"institution": "Milwaukee School of Engineering", "state": "WI", "region": "Great Lakes", "act": 0.32, "sat": 0.1}, {"institution": "Mississippi State University", "state": "MS", "region": "Southeast", "act": 0.85, "sat": 0.06}, {"institution": "Missouri U. of Science and Technology", "state": "MO", "region": "Plains", "act": 0.78, "sat": 0.13}, {"institution": "Montana State University", "state": "MT", "region": "Rocky Mts", "act": 0.38, "sat": 0.21}, {"institution": "Moravian University", "state": "PA", "region": "Mid-Atlantic", "act": 0.02, "sat": 0.19}, {"institution": "Mount Holyoke College", "state": "MA", "region": "New England", "act": 0.02, "sat": 0.13}, {"institution": "Muskingum University", "state": "OH", "region": "Great Lakes", "act": 0.66, "sat": 0.1}, {"institution": "Nazareth College", "state": "NY", "region": "Mid-Atlantic", "act": 0.02, "sat": 0.09}, {"institution": "New College of Florida", "state": "FL", "region": "Southeast", "act": 0.36, "sat": 0.7}, {"institution": "New Jersey Institute of Technology", "state": "NJ", "region": "Mid-Atlantic", "act": 0.03, "sat": 0.4}, {"institution": "New York University", "state": "NY", "region": "Mid-Atlantic", "act": 0.1, "sat": 0.28}, {"institution": "North Carolina State University - Raleigh", "state": "NC", "region": "Southeast", "act": 0.41, "sat": 0.25}, {"institution": "Northeastern Illinois University", "state": "IL", "region": "Great Lakes", "act": 0.01, "sat": 0.1}, {"institution": "Northeastern University", "state": "MA", "region": "New England", "act": 0.07, "sat": 0.24}, {"institution": "Northern Arizona University", "state": "AZ", "region": "Southwest", "act": 0.28, "sat": 0.04}, {"institution": "Northwestern University", "state": "IL", "region": "Great Lakes", "act": 0.23, "sat": 0.46}, {"institution": "Oberlin College and Conservatory", "state": "OH", "region": "Great Lakes", "act": 0.17, "sat": 0.31}, {"institution": "Occidental College", "state": "CA", "region": "West Coast", "act": 0.08, "sat": 0.2}, {"institution": "Oglethorpe University", "state": "GA", "region": "Southeast", "act": 0.12, "sat": 0.24}, {"institution": "Ohio Northern University", "state": "OH", "region": "Great Lakes", "act": 0.65, "sat": 0.13}, {"institution": "Ohio State University - Columbus", "state": "OH", "region": "Great Lakes", "act": 0.4, "sat": 0.24}, {"institution": "Ohio University", "state": "OH", "region": "Great Lakes", "act": 0.33, "sat": 0.12}, {"institution": "Oklahoma State University", "state": "OK", "region": "Southwest", "act": 0.65, "sat": 0.2}, {"institution": "Old Dominion University", "state": "VA", "region": "Southeast", "act": 0.02, "sat": 0.13}, {"institution": "Pace University", "state": "NY", "region": "Mid-Atlantic", "act": 0.03, "sat": 0.13}, {"institution": "Penn State U - Erie, Behrend College", "state": "PA", "region": "Mid-Atlantic", "act": 0.04, "sat": 0.31}, {"institution": "Penn State U - University Park", "state": "PA", "region": "Mid-Atlantic", "act": 0.05, "sat": 0.31}, {"institution": "Pepperdine University", "state": "CA", "region": "West Coast", "act": 0.1, "sat": 0.18}, {"institution": "Pomona College", "state": "CA", "region": "West Coast", "act": 0.14, "sat": 0.36}, {"institution": "Pratt Institute", "state": "NY", "region": "Mid-Atlantic", "act": 0.03, "sat": 0.16}, {"institution": "Princeton University", "state": "NJ", "region": "Mid-Atlantic", "act": 0.21, "sat": 0.56}, {"institution": "Providence College", "state": "RI", "region": "New England", "act": 0.08, "sat": 0.5}, {"institution": "Purdue University", "state": "IN", "region": "Great Lakes", "act": 0.25, "sat": 0.79}, {"institution": "Queens University Charlotte", "state": "NC", "region": "Southeast", "act": 0.11, "sat": 0.13}, {"institution": "Ramapo College of New Jersey", "state": "NJ", "region": "Mid-Atlantic", "act": 0.01, "sat": 0.24}, {"institution": "Randolph College", "state": "VA", "region": "Southeast", "act": 0.05, "sat": 0.03}, {"institution": "Randolph-Macon College", "state": "VA", "region": "Southeast", "act": 0.02, "sat": 0.26}, {"institution": "Reed College", "state": "OR", "region": "West Coast", "act": 0.21, "sat": 0.52}, {"institution": "Rensselaer Polytechnic Institute", "state": "NY", "region": "Mid-Atlantic", "act": 0.11, "sat": 0.49}, {"institution": "Rhodes College", "state": "TN", "region": "Southeast", "act": 0.33, "sat": 0.17}, {"institution": "Rice University ", "state": "TX", "region": "Southwest", "act": 0.22, "sat": 0.48}, {"institution": "Rochester Institute of Technology", "state": "NY", "region": "Mid-Atlantic", "act": 0.11, "sat": 0.43}, {"institution": "Rollins College", "state": "FL", "region": "Southeast", "act": 0.15, "sat": 0.25}, {"institution": "Rose-Hulman Inst. of Technology", "state": "IN", "region": "Great Lakes", "act": 0.2, "sat": 0.39}, {"institution": "Rowan University", "state": "NJ", "region": "Mid-Atlantic", "act": 0.02, "sat": 0.27}, {"institution": "SUNY Binghamton", "state": "NY", "region": "Mid-Atlantic", "act": 0.09, "sat": 0.44}, {"institution": "SUNY Buffalo", "state": "NY", "region": "Mid-Atlantic", "act": 0.03, "sat": 0.28}, {"institution": "SUNY Geneseo", "state": "NY", "region": "Mid-Atlantic", "act": 0.01, "sat": 0.12}, {"institution": "SUNY Purchase", "state": "NY", "region": "Mid-Atlantic", "act": 0.02, "sat": 0.06}, {"institution": "SUNY Stony Brook", "state": "NY", "region": "Mid-Atlantic", "act": 0.03, "sat": 0.34}, {"institution": "Saint Anselm College", "state": "NH", "region": "New England", "act": 0.01, "sat": 0.19}, {"institution": "Saint Joseph's University", "state": "PA", "region": "Mid-Atlantic", "act": 0.02, "sat": 0.24}, {"institution": "Saint Mary's College - Indiana", "state": "IN", "region": "Great Lakes", "act": 0.15, "sat": 0.52}, {"institution": "Saint Michael's College", "state": "VT", "region": "New England", "act": 0.04, "sat": 0.09}, {"institution": "Salisbury University", "state": "MD", "region": "Mid-Atlantic", "act": 0.01, "sat": 0.11}, {"institution": "San Jose State University", "state": "CA", "region": "West Coast", "act": 0.01, "sat": 0.1}, {"institution": "Santa Clara University", "state": "CA", "region": "West Coast", "act": 0.1, "sat": 0.24}, {"institution": "Sarah Lawrence College ", "state": "NY", "region": "Mid-Atlantic", "act": 0.05, "sat": 0.09}, {"institution": "Scripps College", "state": "CA", "region": "West Coast", "act": 0.16, "sat": 0.24}, {"institution": "Sewanee - University of the South", "state": "TN", "region": "Southeast", "act": 0.43, "sat": 0.2}, {"institution": "Siena College", "state": "NY", "region": "Mid-Atlantic", "act": 0.02, "sat": 0.1}, {"institution": "Skidmore College", "state": "NY", "region": "Mid-Atlantic", "act": 0.1, "sat": 0.23}, {"institution": "Slippery Rock University", "state": "PA", "region": "Mid-Atlantic", "act": 0.03, "sat": 0.19}, {"institution": "Smith College", "state": "MA", "region": "New England", "act": 0.14, "sat": 0.3}, {"institution": "Soka University of America", "state": "CA", "region": "West Coast", "act": 0.01, "sat": 0.16}, {"institution": "Southern Methodist University", "state": "TX", "region": "Southwest", "act": 0.09, "sat": 0.16}, {"institution": "Southwestern University", "state": "TX", "region": "Southwest", "act": 0.13, "sat": 0.44}, {"institution": "Spelman College", "state": "GA", "region": "Southeast", "act": 0.16, "sat": 0.23}, {"institution": "Springfield College", "state": "MA", "region": "New England", "act": 0.0, "sat": 0.02}, {"institution": "St. Cloud State University", "state": "MN", "region": "Plains", "act": 0.22, "sat": 0.01}, {"institution": "St. John Fisher University", "state": "NY", "region": "Mid-Atlantic", "act": 0.01, "sat": 0.23}, {"institution": "St. John's College - Annapolis", "state": "MD", "region": "Mid-Atlantic", "act": 0.12, "sat": 0.4}, {"institution": "St. John's College - Santa Fe", "state": "AZ", "region": "Southwest", "act": 0.14, "sat": 0.36}, {"institution": "St. Lawrence University", "state": "NY", "region": "Mid-Atlantic", "act": 0.05, "sat": 0.15}, {"institution": "St. Mary's College of Maryland", "state": "MD", "region": "Mid-Atlantic", "act": 0.05, "sat": 0.28}, {"institution": "St. Mary's University (TX)", "state": "TX", "region": "Southwest", "act": 0.1, "sat": 0.35}, {"institution": "St. Norbert College", "state": "WI", "region": "Great Lakes", "act": 0.51, "sat": 0.06}, {"institution": "St. Olaf College", "state": "MN", "region": "Plains", "act": 0.29, "sat": 0.11}, {"institution": "Stanford University", "state": "CA", "region": "West Coast", "act": 0.19, "sat": 0.5}, {"institution": "Stetson University", "state": "FL", "region": "Southeast", "act": 0.18, "sat": 0.38}, {"institution": "Stevens Institute of Technology", "state": "NJ", "region": "Mid-Atlantic", "act": 0.06, "sat": 0.36}, {"institution": "Susquehanna University", "state": "PA", "region": "Mid-Atlantic", "act": 0.06, "sat": 0.41}, {"institution": "Swarthmore College", "state": "PA", "region": "Mid-Atlantic", "act": 0.16, "sat": 0.39}, {"institution": "Temple University", "state": "PA", "region": "Mid-Atlantic", "act": 0.02, "sat": 0.18}, {"institution": "Texas A & M University", "state": "TX", "region": "Southwest", "act": 0.19, "sat": 0.71}, {"institution": "Texas Christian University", "state": "TX", "region": "Southwest", "act": 0.21, "sat": 0.22}, {"institution": "Texas Tech University", "state": "TX", "region": "Southwest", "act": 0.11, "sat": 0.33}, {"institution": "The Citadel", "state": "SC", "region": "Southeast", "act": 0.1, "sat": 0.07}, {"institution": "The College of New Jersey", "state": "NJ", "region": "Mid-Atlantic", "act": 0.03, "sat": 0.39}, {"institution": "Towson University", "state": "MD", "region": "Mid-Atlantic", "act": 0.01, "sat": 0.18}, {"institution": "Trinity College", "state": "CT", "region": "New England", "act": 0.03, "sat": 0.07}, {"institution": "Trinity University", "state": "TX", "region": "Southwest", "act": 0.15, "sat": 0.33}, {"institution": "Tufts University", "state": "MA", "region": "New England", "act": 0.18, "sat": 0.38}, {"institution": "Tulane University", "state": "LA", "region": "Southeast", "act": 0.28, "sat": 0.13}, {"institution": "Union College", "state": "NY", "region": "Mid-Atlantic", "act": 0.11, "sat": 0.32}, {"institution": "University of Alabama - Birmingham", "state": "AL", "region": "Southeast", "act": 0.43, "sat": 0.04}, {"institution": "University of Alabama - Tuscaloosa", "state": "AL", "region": "Southeast", "act": 0.54, "sat": 0.2}, {"institution": "University of Arizona", "state": "AZ", "region": "Southwest", "act": 0.18, "sat": 0.11}, {"institution": "University of Arkansas", "state": "AR", "region": "Southeast", "act": 0.73, "sat": 0.31}, {"institution": "University of Central Florida", "state": "FL", "region": "Southeast", "act": 0.28, "sat": 0.71}, {"institution": "University of Chicago ", "state": "IL", "region": "Great Lakes", "act": 0.27, "sat": 0.49}, {"institution": "University of Cincinnati", "state": "OH", "region": "Great Lakes", "act": 0.31, "sat": 0.11}, {"institution": "University of Colorado - Boulder", "state": "CO", "region": "Rocky Mts", "act": 0.07, "sat": 0.25}, {"institution": "University of Colorado - Colorado Springs", "state": "CO", "region": "Rocky Mts", "act": 0.06, "sat": 0.34}, {"institution": "University of Colorado - Denver", "state": "CO", "region": "Rocky Mts", "act": 0.02, "sat": 0.23}, {"institution": "University of Connecticut", "state": "CT", "region": "New England", "act": 0.05, "sat": 0.36}, {"institution": "University of Dallas", "state": "TX", "region": "Southwest", "act": 0.19, "sat": 0.4}, {"institution": "University of Dayton", "state": "OH", "region": "Great Lakes", "act": 0.37, "sat": 0.12}, {"institution": "University of Delaware", "state": "DE", "region": "Mid-Atlantic", "act": 0.03, "sat": 0.19}, {"institution": "University of Denver", "state": "CO", "region": "Rocky Mts", "act": 0.13, "sat": 0.24}, {"institution": "University of Detroit Mercy", "state": "MI", "region": "Great Lakes", "act": 0.06, "sat": 0.51}, {"institution": "University of Florida", "state": "FL", "region": "Southeast", "act": 0.4, "sat": 0.8}, {"institution": "University of Georgia", "state": "GA", "region": "Southeast", "act": 0.46, "sat": 0.7}, {"institution": "University of Houston", "state": "TX", "region": "Southwest", "act": 0.13, "sat": 0.46}, {"institution": "University of Illinois - Chicago", "state": "IL", "region": "Great Lakes", "act": 0.05, "sat": 0.3}, {"institution": "University of Illinois - Urbana Champaign", "state": "IL", "region": "Great Lakes", "act": 0.14, "sat": 0.41}, {"institution": "University of Iowa", "state": "IA", "region": "Plains", "act": 0.57, "sat": 0.16}, {"institution": "University of Kansas", "state": "KS", "region": "Plains", "act": 0.55, "sat": 0.09}, {"institution": "University of Kentucky", "state": "KY", "region": "Southeast", "act": 0.5, "sat": 0.07}, {"institution": "University of Louisville", "state": "KY", "region": "Southeast", "act": 0.85, "sat": 0.18}, {"institution": "University of Maine", "state": "ME", "region": "New England", "act": 0.02, "sat": 0.16}, {"institution": "University of Mary Washington", "state": "VA", "region": "Southeast", "act": 0.04, "sat": 0.26}, {"institution": "University of Maryland - Baltimore County", "state": "MD", "region": "Mid-Atlantic", "act": 0.03, "sat": 0.27}, {"institution": "University of Maryland - College Park", "state": "MD", "region": "Mid-Atlantic", "act": 0.06, "sat": 0.37}, {"institution": "University of Massachusetts - Amherst", "state": "MA", "region": "New England", "act": 0.0, "sat": 0.22}, {"institution": "University of Massachusetts - Boston", "state": "MA", "region": "New England", "act": 0.01, "sat": 0.23}, {"institution": "University of Massachusetts - Dartmouth", "state": "MA", "region": "New England", "act": 0.01, "sat": 0.1}, {"institution": "University of Massachusetts - Lowell", "state": "MA", "region": "New England", "act": 0.02, "sat": 0.27}, {"institution": "University of Memphis", "state": "TN", "region": "Southeast", "act": 0.9, "sat": 0.04}, {"institution": "University of Miami", "state": "FL", "region": "Southeast", "act": 0.19, "sat": 0.33}, {"institution": "University of Michigan - Ann Arbor", "state": "MI", "region": "Great Lakes", "act": 0.18, "sat": 0.51}, {"institution": "University of Minnesota - Twin Cities", "state": "MN", "region": "Plains", "act": 0.33, "sat": 0.08}, {"institution": "University of Mississippi", "state": "MS", "region": "Southeast", "act": 0.6, "sat": 0.23}, {"institution": "University of Missouri - Columbia", "state": "MO", "region": "Plains", "act": 0.6, "sat": 0.1}, {"institution": "University of Nevada - Las Vegas", "state": "NV", "region": "West Coast", "act": 0.65, "sat": 0.09}, {"institution": "University of Nevada - Reno", "state": "NV", "region": "West Coast", "act": 0.59, "sat": 0.14}, {"institution": "University of New Hampshire", "state": "NH", "region": "New England", "act": 0.02, "sat": 0.23}, {"institution": "University of New Haven", "state": "CT", "region": "New England", "act": 0.04, "sat": 0.26}, {"institution": "University of New Mexico", "state": "NM", "region": "Southwest", "act": 0.08, "sat": 0.48}, {"institution": "University of North Carolina - Asheville", "state": "NC", "region": "Southeast", "act": 0.17, "sat": 0.07}, {"institution": "University of North Carolina - Chapel Hill", "state": "NC", "region": "Southeast", "act": 0.41, "sat": 0.28}, {"institution": "University of North Carolina - Charlotte", "state": "NC", "region": "Southeast", "act": 0.25, "sat": 0.15}, {"institution": "University of North Carolina - Wilmington", "state": "NC", "region": "Southeast", "act": 0.12, "sat": 0.05}, {"institution": "University of North Dakota", "state": "ND", "region": "Plains", "act": 0.34, "sat": 0.05}, {"institution": "University of North Florida", "state": "FL", "region": "Southeast", "act": 0.34, "sat": 0.66}, {"institution": "University of North Texas", "state": "TX", "region": "Southwest", "act": 0.09, "sat": 0.43}, {"institution": "University of Northern Iowa", "state": "IA", "region": "Plains", "act": 0.43, "sat": 0.01}, {"institution": "University of Oklahoma", "state": "OK", "region": "Southwest", "act": 0.4, "sat": 0.23}, {"institution": "University of Oregon", "state": "OR", "region": "West Coast", "act": 0.05, "sat": 0.08}, {"institution": "University of Pennsylvania", "state": "PA", "region": "Mid-Atlantic", "act": 0.17, "sat": 0.5}, {"institution": "University of Pittsburgh", "state": "PA", "region": "Mid-Atlantic", "act": 0.1, "sat": 0.4}, {"institution": "University of Portland", "state": "OR", "region": "West Coast", "act": 0.03, "sat": 0.06}, {"institution": "University of Puget Sound", "state": "WA", "region": "West Coast", "act": 0.1, "sat": 0.31}, {"institution": "University of Rhode Island", "state": "RI", "region": "New England", "act": null, "sat": 0.27}, {"institution": "University of Richmond", "state": "VA", "region": "Southeast", "act": 0.14, "sat": 0.19}, {"institution": "University of Rochester and Eastman School of Music", "state": "NY", "region": "Mid-Atlantic", "act": 0.06, "sat": 0.19}, {"institution": "University of Saint Joseph", "state": "CT", "region": "New England", "act": 0.0, "sat": 0.13}, {"institution": "University of San Francisco", "state": "CA", "region": "West Coast", "act": 0.03, "sat": 0.12}, {"institution": "University of South Carolina", "state": "SC", "region": "Southeast", "act": 0.15, "sat": 0.29}, {"institution": "University of South Florida", "state": "FL", "region": "Southeast", "act": 0.22, "sat": 0.78}, {"institution": "University of Southern California (3)", "state": "CA", "region": "West Coast", "act": 0.12, "sat": 0.3}, {"institution": "University of Tennesee - Knoxville", "state": "TN", "region": "Southeast", "act": 0.81, "sat": 0.24}, {"institution": "University of Texas - Dallas", "state": "TX", "region": "Southwest", "act": 0.13, "sat": 0.78}, {"institution": "University of Texas - El Paso", "state": "TX", "region": "Southwest", "act": 0.02, "sat": 0.54}, {"institution": "University of Texas - San Antonio", "state": "TX", "region": "Southwest", "act": 0.07, "sat": 0.61}, {"institution": "University of Toledo", "state": "OH", "region": "Great Lakes", "act": 0.38, "sat": 0.19}, {"institution": "University of Utah", "state": "UT", "region": "Rocky Mts", "act": 0.38, "sat": 0.1}, {"institution": "University of Vermont", "state": "VT", "region": "New England", "act": 0.1, "sat": 0.25}, {"institution": "University of Virginia", "state": "VA", "region": "Southeast", "act": 0.14, "sat": 0.46}, {"institution": "University of Washington - Seattle", "state": "WA", "region": "West Coast", "act": 0.04, "sat": 0.15}, {"institution": "University of Wisconsin - Madison", "state": "WI", "region": "Great Lakes", "act": 0.35, "sat": 0.15}, {"institution": "University of the Pacific", "state": "CA", "region": "West Coast", "act": 0.05, "sat": 0.21}, {"institution": "Ursinus College", "state": "PA", "region": "Mid-Atlantic", "act": 0.03, "sat": 0.23}, {"institution": "Valparaiso University", "state": "IN", "region": "Great Lakes", "act": 0.05, "sat": 0.39}, {"institution": "Vanderbilt University", "state": "TN", "region": "Southeast", "act": 0.25, "sat": 0.27}, {"institution": "Vassar College", "state": "NY", "region": "Mid-Atlantic", "act": 0.12, "sat": 0.31}, {"institution": "Villanova University", "state": "PA", "region": "Mid-Atlantic", "act": 0.09, "sat": 0.19}, {"institution": "Virginia Military Institute", "state": "VA", "region": "Southeast", "act": 0.03, "sat": 0.04}, {"institution": "Virginia Tech", "state": "VA", "region": "Southeast", "act": 0.09, "sat": 0.41}, {"institution": "Wabash College", "state": "IN", "region": "Great Lakes", "act": 0.07, "sat": 0.52}, {"institution": "Wake Forest University", "state": "NC", "region": "Southeast", "act": 0.26, "sat": 0.22}, {"institution": "Wartburg College", "state": "IA", "region": "Plains", "act": 0.24, "sat": 0.03}, {"institution": "Washington & Jefferson College", "state": "PA", "region": "Mid-Atlantic", "act": 0.08, "sat": 0.37}, {"institution": "Washington College", "state": "MD", "region": "Mid-Atlantic", "act": 0.02, "sat": 0.12}, {"institution": "Washington State University", "state": "WA", "region": "West Coast", "act": 0.02, "sat": 0.05}, {"institution": "Washington University in St. Louis", "state": "MO", "region": "Plains", "act": 0.28, "sat": 0.29}, {"institution": "Washington and Lee University", "state": "VA", "region": "Southeast", "act": 0.2, "sat": 0.24}, {"institution": "Wellesley College", "state": "MA", "region": "New England", "act": 0.18, "sat": 0.43}, {"institution": "Wentworth Institute of Technology", "state": "MA", "region": "New England", "act": 0.28, "sat": 0.03}, {"institution": "Wesleyan University", "state": "CT", "region": "New England", "act": 0.17, "sat": 0.41}, {"institution": "Western Washington University", "state": "WA", "region": "West Coast", "act": 0.02, "sat": 0.08}, {"institution": "Westminster University (UT)", "state": "UT", "region": "Rocky Mts", "act": 0.35, "sat": 0.09}, {"institution": "Westmont College", "state": "CA", "region": "West Coast", "act": 0.08, "sat": 0.2}, {"institution": "Wheaton College (IL)", "state": "IL", "region": "Great Lakes", "act": 0.2, "sat": 0.35}, {"institution": "Whitman College", "state": "WA", "region": "West Coast", "act": 0.07, "sat": 0.09}, {"institution": "Whitworth College", "state": "WA", "region": "West Coast", "act": 0.05, "sat": 0.13}, {"institution": "Willamette University", "state": "OR", "region": "West Coast", "act": 0.12, "sat": 0.25}, {"institution": "William & Mary", "state": "VA", "region": "Southeast", "act": 0.16, "sat": 0.43}, {"institution": "Williams College", "state": "MA", "region": "New England", "act": 0.17, "sat": 0.35}, {"institution": "Wittenberg University", "state": "OH", "region": "Great Lakes", "act": 0.23, "sat": 0.09}, {"institution": "Xavier University of Louisiana", "state": "LA", "region": "Southeast", "act": 0.46, "sat": 0.33}, {"institution": "Yale University", "state": "CT", "region": "New England", "act": 0.25, "sat": 0.61}, {"institution": "Yeshiva University", "state": "NY", "region": "Mid-Atlantic", "act": 0.16, "sat": 0.19}];
+    const regions = ["Great Lakes", "Mid-Atlantic", "New England", "Plains", "Rocky Mts", "Southeast", "Southwest", "West Coast"];
+    const states = ["AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "TN", "TX", "UT", "VA", "VT", "WA", "WI"];
+
+    let sortKey = "sat";
+    let sortDir = -1;
+
+    const $ = (id) => document.getElementById(id);
+    const fmt = (v) => v === null || Number.isNaN(v) ? "—" : Math.round(v * 100) + "%";
+    const avg = (arr) => {
+      const vals = arr.filter(v => v !== null && !Number.isNaN(v));
+      return vals.length ? vals.reduce((a,b) => a + b, 0) / vals.length : null;
+    };
+
+    function fillSelect(select, values) {
+      values.forEach(v => {
+        const opt = document.createElement("option");
+        opt.value = v;
+        opt.textContent = v;
+        select.appendChild(opt);
+      });
+    }
+
+    fillSelect($("regionFilter"), regions);
+    fillSelect($("stateFilter"), states);
+
+    function pattern(row) {
+      if (row.sat === row.act) return "Balanced";
+      if ((row.sat ?? -1) > (row.act ?? -1)) return "SAT-leaning";
+      return "ACT-leaning";
+    }
+
+    function combined(row) {
+      return Math.max(row.sat ?? -1, row.act ?? -1);
+    }
+
+    function passes(row) {
+      const q = $("searchInput").value.trim().toLowerCase();
+      const region = $("regionFilter").value;
+      const state = $("stateFilter").value;
+      const test = $("testFilter").value;
+
+      const text = [row.institution, row.state, row.region].join(" ").toLowerCase();
+      if (q && !text.includes(q)) return false;
+      if (region && row.region !== region) return false;
+      if (state && row.state !== state) return false;
+
+      if (test === "sat" && !((row.sat ?? -1) > (row.act ?? -1))) return false;
+      if (test === "act" && !((row.act ?? -1) > (row.sat ?? -1))) return false;
+      if (test === "balanced" && row.sat !== row.act) return false;
+
+      return true;
+    }
+
+    function sortValue(row, key) {
+      if (key === "combined") return combined(row);
+      if (key === "pattern") return pattern(row);
+      if (key === "rank") return 0;
+      return row[key];
+    }
+
+    function updateMetrics(rows) {
+      $("countMetric").textContent = rows.length.toLocaleString();
+      $("avgSatMetric").textContent = fmt(avg(rows.map(r => r.sat)));
+      $("avgActMetric").textContent = fmt(avg(rows.map(r => r.act)));
+
+      if (!rows.length) {
+        $("highestMetric").textContent = "—";
+        $("highestDetail").textContent = "No matching institutions";
+        return;
+      }
+
+      const top = [...rows].sort((a,b) => combined(b) - combined(a))[0];
+      const topTest = (top.sat ?? -1) >= (top.act ?? -1) ? "SAT" : "ACT";
+      $("highestMetric").textContent = fmt(combined(top));
+      $("highestDetail").textContent = top.institution + " · " + topTest;
+    }
+
+    function render() {
+      const rows = data.filter(passes).sort((a,b) => {
+        const av = sortValue(a, sortKey);
+        const bv = sortValue(b, sortKey);
+        if (typeof av === "string") return av.localeCompare(bv) * sortDir;
+        return ((av ?? -1) - (bv ?? -1)) * sortDir;
+      });
+
+      updateMetrics(rows);
+      $("resultText").textContent = `Showing ${rows.length.toLocaleString()} of ${data.length.toLocaleString()} institutions`;
+
+      const body = $("tableBody");
+      body.innerHTML = "";
+      rows.forEach((row, i) => {
+        const tr = document.createElement("tr");
+        const p = pattern(row);
+        tr.innerHTML = `
+          <td class="rank">#${i + 1}</td>
+          <td><div class="school">${row.institution}</div><div class="small">${row.region} · ${row.state}</div></td>
+          <td>${row.region}</td>
+          <td>${row.state}</td>
+          <td><span class="percent">${fmt(row.sat)}</span><span class="bar"><span class="fill sat" style="width:${Math.max(0, row.sat ?? 0) * 100}%"></span></span></td>
+          <td><span class="percent">${fmt(row.act)}</span><span class="bar"><span class="fill act" style="width:${Math.max(0, row.act ?? 0) * 100}%"></span></span></td>
+          <td><span class="percent">${fmt(combined(row))}</span><span class="bar"><span class="fill combined" style="width:${Math.max(0, combined(row)) * 100}%"></span></span></td>
+          <td><span class="pill">${p}</span></td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    ["searchInput", "regionFilter", "stateFilter", "testFilter"].forEach(id => {
+      $(id).addEventListener("input", render);
+      $(id).addEventListener("change", render);
+    });
+
+    $("resetBtn").addEventListener("click", () => {
+      $("searchInput").value = "";
+      $("regionFilter").value = "";
+      $("stateFilter").value = "";
+      $("testFilter").value = "";
+      sortKey = "sat";
+      sortDir = -1;
+      document.querySelectorAll(".toggle button").forEach(b => b.classList.toggle("active", b.dataset.sort === "sat"));
+      render();
+    });
+
+    document.querySelectorAll("thead th").forEach(th => {
+      th.addEventListener("click", () => {
+        const key = th.dataset.key;
+        if (!key || key === "rank") return;
+        if (sortKey === key) sortDir *= -1;
+        else {
+          sortKey = key;
+          sortDir = ["institution", "region", "state", "pattern"].includes(key) ? 1 : -1;
+        }
+        document.querySelectorAll(".toggle button").forEach(b => b.classList.toggle("active", b.dataset.sort === sortKey));
+        render();
+      });
+    });
+
+    document.querySelectorAll(".toggle button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        sortKey = btn.dataset.sort;
+        sortDir = -1;
+        document.querySelectorAll(".toggle button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        render();
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>
